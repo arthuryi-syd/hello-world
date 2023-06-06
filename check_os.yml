@@ -1,0 +1,27 @@
+---
+  - name: Check OS version of RHEL servers
+    hosts: all
+    become: yes
+    become_user: root
+    tasks:
+      - name: "Check the version of Redhat OS"
+        shell: cat /etc/os-release
+        register: svr_osrelease
+
+      - debug:
+          var: svr_osrelease.stdout_lines
+
+      - name: check reboot time
+        shell: uptime
+        register: svr_uptime
+        ignore_errors: true
+
+      - name: check who
+        shell: who -rb
+        register: svr_whorb
+        ignore_errors: true
+
+      - debug:
+          msg:
+            - "{{ svr_uptime.stdout }}"
+            - "{{ svr_whorb.stdout }}"
